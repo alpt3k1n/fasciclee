@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { courses, type Source } from '@/lib/api'
 import CurriculumTab from '@/components/CurriculumTab'
+import TopicGraphTab from '@/components/TopicGraphTab'
 
 const STATUS_LABEL: Record<string, string> = {
   pending: 'Bekliyor',
@@ -30,7 +31,7 @@ const TYPE_ICON: Record<string, string> = {
   curriculum: '📋',
 }
 
-type Tab = 'sources' | 'curriculum'
+type Tab = 'sources' | 'curriculum' | 'topic-graph'
 
 export default function CourseDetail() {
   const { id } = useParams<{ id: string }>()
@@ -78,6 +79,7 @@ export default function CourseDetail() {
   const TABS: { key: Tab; label: string }[] = [
     { key: 'sources', label: 'Kaynaklar' },
     { key: 'curriculum', label: 'Müfredat' },
+    { key: 'topic-graph', label: 'Konu Grafiği' },
   ]
 
   return (
@@ -188,6 +190,9 @@ export default function CourseDetail() {
 
       {/* Curriculum tab */}
       {tab === 'curriculum' && <CurriculumTab courseId={id!} />}
+
+      {/* Topic graph tab */}
+      {tab === 'topic-graph' && <TopicGraphTab courseId={id!} />}
     </div>
   )
 }

@@ -26,6 +26,32 @@ export interface Source {
   indexed_at: string | null
 }
 
+export interface TopicNodeOut {
+  id: string
+  parent_id: string | null
+  title: string
+  summary: string | null
+  position: number | null
+  status: 'auto' | 'user_edited' | 'approved'
+  ai_confidence: number | null
+  objective_codes: string[]
+  children: TopicNodeOut[]
+}
+
+export interface GapReportItem {
+  objective_code: string
+  objective_text: string
+  issue: string
+  severity: 'high' | 'medium' | 'low'
+}
+
+export interface TopicGraphOut {
+  extraction_status: string | null
+  nodes: TopicNodeOut[]
+  gap_report: GapReportItem[]
+  all_approved: boolean
+}
+
 export interface Objective {
   id: string
   parent_id: string | null
@@ -63,6 +89,21 @@ export const courses = {
   },
   addYouTube: (courseId: string, url: string) =>
     api.post<Source>(`/courses/${courseId}/sources/youtube`, { url }).then(r => r.data),
+
+  getTopicGraph: (courseId: string) =>
+    api.get<TopicGraphOut>(`/courses/${courseId}/topic-graph`).then(r => r.data),
+  extractTopicGraph: (courseId: string) =>
+    api.post(`/courses/${courseId}/extract-topic-graph`).then(r => r.data),
+  approveNode: (courseId: string, nodeId: string) =>
+    api.post<TopicNodeOut>(`/courses/${courseId}/topic-graph/${nodeId}/approve`).then(r => r.data),
+  approveAll: (courseId: string) =>
+    api.post(`/courses/${courseId}/topic-graph/approve-all`),
+  updateNode: (courseId: string, nodeId: string, data: Partial<{ title: string; summary: string; status: string }>) =>
+    api.patch<TopicNodeOut>(`/courses/${courseId}/topic-graph/${nodeId}`, data).then(r => r.data),
+  deleteNode: (courseId: string, nodeId: string) =>
+    api.delete(`/courses/${courseId}/topic-graph/${nodeId}`),
+  createNode: (courseId: string, data: { title: string; parent_id?: string }) =>
+    api.post<TopicNodeOut>(`/courses/${courseId}/topic-graph/nodes`, data).then(r => r.data),
 
   listCurricula: (courseId: string) =>
     api.get<Curriculum[]>(`/courses/${courseId}/curriculum`).then(r => r.data),

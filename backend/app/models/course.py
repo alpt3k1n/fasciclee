@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from sqlalchemy import String, Text, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from app.database import Base
 
 
@@ -19,6 +19,8 @@ class Course(Base):
     language: Mapped[str] = mapped_column(String(8), default="tr")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow)
+    topic_extraction_status: Mapped[str | None] = mapped_column(String(16))
+    gap_report: Mapped[list | None] = mapped_column(JSONB)
 
     sources: Mapped[list["Source"]] = relationship(back_populates="course", cascade="all, delete-orphan")
     curricula: Mapped[list["Curriculum"]] = relationship(back_populates="course", cascade="all, delete-orphan")
