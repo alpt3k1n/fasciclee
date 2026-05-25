@@ -1,0 +1,46 @@
+# Web framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+python-multipart==0.0.12
+
+# Database
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0
+alembic==1.14.0
+psycopg2-binary==2.9.10
+
+# Pydantic
+pydantic==2.10.3
+pydantic-settings==2.6.1
+
+# Job queue
+rq==1.17.1
+redis==5.2.1
+rq-scheduler==0.13.1
+
+# Object storage
+minio==7.2.12
+
+# Vector DB
+qdrant-client==1.12.1
+
+# LLM providers (OpenAI-compatible SDK covers DeepSeek + Groq)
+openai==1.58.1
+anthropic==0.40.0
+
+# PDF processing
+pymupdf==1.24.14
+pytesseract==0.3.13
+Pillow==11.0.0
+
+# Audio processing (PC worker only, listed for completeness)
+# faster-whisper==1.0.3
+
+# Embeddings
+sentence-transformers==3.3.1
+
+# Utilities
+loguru==0.7.3
+httpx==0.28.1
+python-dotenv==1.0.1
+yt-dlp==2024.12.13
