@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="$lang$" xml:lang="$lang$">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$title$</title>
+  <style>
+$styles()$
+  </style>
+  <!-- KaTeX for math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters:[
+      {left:'$$',right:'$$',display:true},
+      {left:'$',right:'$',display:false}
+    ]})"></script>
+  <!-- Mermaid for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true, theme:'neutral'});</script>
+</head>
+<body>
+$if(toc)$
+<nav id="TOC" role="doc-toc">
+  <strong>İçindekiler</strong>
+  $table-of-contents$
+</nav>
+$endif$
+<header>
+  <h1 class="title">$title$</h1>
+  $if(subtitle)$<p class="subtitle">$subtitle$</p>$endif$
+  $if(date)$<p class="date">$date$</p>$endif$
+</header>
+$body$
+<script>
+// Re-render mermaid after page load (for dynamically added content)
+document.querySelectorAll('code.language-mermaid').forEach(el => {
+  const pre = el.parentElement;
+  const div = document.createElement('div');
+  div.className = 'mermaid';
+  div.textContent = el.textContent;
+  pre.replaceWith(div);
+});
+mermaid.init();
+</script>
+</body>
+</html>

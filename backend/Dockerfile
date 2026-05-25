@@ -3,6 +3,8 @@ FROM python:3.12-slim
 RUN apt-get update && apt-get install -y \
     tesseract-ocr tesseract-ocr-tur tesseract-ocr-eng \
     ffmpeg \
+    pandoc \
+    texlive-xetex texlive-fonts-recommended texlive-lang-other \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

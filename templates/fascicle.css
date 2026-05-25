@@ -1,0 +1,89 @@
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: "Georgia", "DejaVu Serif", serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #1a1a1a;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  background: #fff;
+}
+
+h1 { font-size: 2rem; border-bottom: 2px solid #1a1a1a; padding-bottom: .4rem; margin-top: 2.5rem; }
+h2 { font-size: 1.5rem; margin-top: 2rem; border-bottom: 1px solid #ddd; padding-bottom: .25rem; }
+h3 { font-size: 1.15rem; margin-top: 1.5rem; }
+h4 { font-size: 1rem; margin-top: 1.2rem; }
+
+p { margin: .8rem 0; }
+
+table { border-collapse: collapse; width: 100%; margin: 1.2rem 0; font-size: .9rem; }
+th, td { border: 1px solid #ccc; padding: .5rem .75rem; text-align: left; }
+th { background: #f5f5f5; font-weight: 600; }
+tr:nth-child(even) td { background: #fafafa; }
+
+code { font-family: "Consolas", monospace; font-size: .85em; background: #f3f4f6; padding: .1em .35em; border-radius: 3px; }
+pre code { background: transparent; padding: 0; }
+pre { background: #f3f4f6; padding: 1rem; border-radius: 6px; overflow-x: auto; }
+
+details summary { cursor: pointer; font-weight: 600; color: #2563eb; }
+details[open] summary { margin-bottom: .5rem; }
+details { margin: .8rem 0; padding: .5rem .75rem; border: 1px solid #bfdbfe; border-radius: 6px; background: #eff6ff; }
+
+.footnotes { font-size: .82rem; color: #555; border-top: 1px solid #ddd; margin-top: 2.5rem; padding-top: 1rem; }
+.footnotes ol { padding-left: 1.2rem; }
+
+/* ── TOC sidebar (print: hidden) ── */
+nav#TOC {
+  position: fixed;
+  top: 1rem;
+  right: 1.5rem;
+  width: 210px;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  font-size: .78rem;
+  background: #f9f9f9;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  z-index: 100;
+}
+nav#TOC ul { list-style: none; padding-left: .75rem; margin: 0; }
+nav#TOC > ul { padding-left: 0; }
+nav#TOC li { margin: .2rem 0; }
+nav#TOC a { color: #374151; text-decoration: none; }
+nav#TOC a:hover { color: #1d4ed8; }
+
+@media (max-width: 1100px) { nav#TOC { display: none; } }
+
+/* ── Custom blocks ── */
+.klinik, .tanım, .mnemonics, .vaka, .dikkat, .not {
+  margin: 1.2rem 0;
+  padding: .85rem 1.1rem;
+  border-radius: 6px;
+  border-left: 4px solid;
+  page-break-inside: avoid;
+}
+.klinik   { border-color: #dc2626; background: #fef2f2; }
+.tanım    { border-color: #2563eb; background: #eff6ff; }
+.mnemonics{ border-color: #d97706; background: #fffbeb; }
+.vaka     { border-color: #0891b2; background: #ecfeff; }
+.dikkat   { border-color: #ea580c; background: #fff7ed; }
+.not      { border-color: #6b7280; background: #f9fafb; }
+
+.klinik::before   { content: "🩺 Klinik"; font-weight: 700; display: block; margin-bottom: .4rem; color: #dc2626; }
+.tanım::before    { content: "📖 Tanım"; font-weight: 700; display: block; margin-bottom: .4rem; color: #2563eb; }
+.mnemonics::before{ content: "🧠 Mnemonic"; font-weight: 700; display: block; margin-bottom: .4rem; color: #d97706; }
+.vaka::before     { content: "👤 Vaka"; font-weight: 700; display: block; margin-bottom: .4rem; color: #0891b2; }
+.dikkat::before   { content: "⚠️ Dikkat"; font-weight: 700; display: block; margin-bottom: .4rem; color: #ea580c; }
+
+/* ── Print ── */
+@media print {
+  body { max-width: 100%; padding: 1cm 1.5cm; font-size: 11pt; }
+  nav#TOC { display: none; }
+  h1, h2, h3 { page-break-after: avoid; }
+  .klinik, .tanım, .mnemonics, .vaka, .dikkat, .not { page-break-inside: avoid; }
+  a[href]::after { content: none; }
+}

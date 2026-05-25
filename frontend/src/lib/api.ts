@@ -52,6 +52,15 @@ export interface GenerationOut {
   sections: SectionOut[]
 }
 
+export interface Artifact {
+  id: string
+  type: 'markdown' | 'html' | 'pdf'
+  storage_key: string
+  size_bytes: number | null
+  created_at: string | null
+  url: string | null
+}
+
 export interface GenerationConfig {
   depth: string
   language: string
@@ -131,6 +140,10 @@ export const courses = {
     api.get<GenerationOut>(`/generations/${generationId}`).then(r => r.data),
   cancelGeneration: (generationId: string) =>
     api.post(`/generations/${generationId}/cancel`),
+  compileGeneration: (generationId: string) =>
+    api.post(`/generations/${generationId}/compile`).then(r => r.data),
+  listArtifacts: (generationId: string) =>
+    api.get<Artifact[]>(`/generations/${generationId}/artifacts`).then(r => r.data),
 
   getTopicGraph: (courseId: string) =>
     api.get<TopicGraphOut>(`/courses/${courseId}/topic-graph`).then(r => r.data),
