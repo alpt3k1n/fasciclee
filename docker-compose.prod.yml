@@ -1,0 +1,16 @@
+services:
+  api:
+    volumes: []
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
+
+  worker_vps:
+    volumes:
+      - ./pandoc-filters:/pandoc-filters:ro
+      - ./templates:/templates:ro
+
+  caddy:
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./frontend/dist:/srv/frontend:ro
+      - caddy_data:/data
+      - caddy_config:/config
