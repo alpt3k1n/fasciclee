@@ -116,6 +116,30 @@ async def add_youtube(course_id: uuid.UUID, body: YouTubeAddRequest, db: AsyncSe
     return source
 
 
+@router.delete("/{course_id}/sources/{source_id}", status_code=204)
+async def delete_source(course_id: uuid.UUID, source_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    source = await db.get(Source, source_id)
+    if not source or source.course_id != course_id:
+        raise HTTPException(404, "Source not found")
+    await db.delete(source)
+    await db.commit()
+
+
+@router.post("/{course_id}/sources/{source_id}/retry", response_model=SourceOut)
+async def retry_source(course_id: uuid.UUID, source_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+    source = await db.get(Source, source_id)
+    if not source or source.course_id != course_id:
+        raise HTTPException(404, "Source not found")
+    if source.status not in (SourceStatus.failed, SourceStatus.processed):
+        raise HTTPException(422, "Only failed or processed sources can be retried")
+    source.status = SourceStatus.pending
+    source.error_message = None
+    await db.commit()
+    await db.refresh(source)
+    _enqueue_ingestion(source)
+    return source
+
+
 def _detect_type(filename: str) -> SourceType:
     ext = filename.lower().rsplit(".", 1)[-1] if "." in filename else ""
     mapping = {

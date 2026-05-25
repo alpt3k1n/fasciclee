@@ -131,6 +131,10 @@ export const courses = {
   },
   addYouTube: (courseId: string, url: string) =>
     api.post<Source>(`/courses/${courseId}/sources/youtube`, { url }).then(r => r.data),
+  deleteSource: (courseId: string, sourceId: string) =>
+    api.delete(`/courses/${courseId}/sources/${sourceId}`),
+  retrySource: (courseId: string, sourceId: string) =>
+    api.post<Source>(`/courses/${courseId}/sources/${sourceId}/retry`).then(r => r.data),
 
   listGenerations: (courseId: string) =>
     api.get<GenerationOut[]>(`/courses/${courseId}/generations`).then(r => r.data),

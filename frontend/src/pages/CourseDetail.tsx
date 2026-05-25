@@ -70,6 +70,16 @@ export default function CourseDetail() {
     },
   })
 
+  const deleteMut = useMutation({
+    mutationFn: (sourceId: string) => courses.deleteSource(id!, sourceId),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['courses', id, 'sources'] }),
+  })
+
+  const retryMut = useMutation({
+    mutationFn: (sourceId: string) => courses.retrySource(id!, sourceId),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['courses', id, 'sources'] }),
+  })
+
   const onFileDrop = (e: React.DragEvent) => {
     e.preventDefault()
     Array.from(e.dataTransfer.files).forEach(f => uploadMut.mutate(f))
@@ -163,6 +173,13 @@ export default function CourseDetail() {
             )}
           </div>
 
+          {uploadMut.isPending && (
+            <div className="mb-2 text-xs text-blue-600 bg-blue-50 rounded px-3 py-2 flex items-center gap-2">
+              <span className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+              Yükleniyor...
+            </div>
+          )}
+
           {loadingSources ? (
             <div className="text-slate-400 text-sm">Yükleniyor...</div>
           ) : !sources?.length ? (
@@ -177,12 +194,36 @@ export default function CourseDetail() {
                       {s.original_filename || s.external_url || s.type}
                     </div>
                     {s.error_message && (
-                      <div className="text-xs text-red-500 mt-0.5">{s.error_message}</div>
+                      <div className="text-xs text-red-500 mt-0.5 truncate">{s.error_message}</div>
                     )}
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_COLOR[s.status]}`}>
+                  {(s.status === 'pending' || s.status === 'processing') && (
+                    <span className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                  )}
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0 ${STATUS_COLOR[s.status]}`}>
                     {STATUS_LABEL[s.status]}
                   </span>
+                  {s.status === 'failed' && (
+                    <button
+                      onClick={() => retryMut.mutate(s.id)}
+                      disabled={retryMut.isPending}
+                      className="text-xs text-orange-600 hover:text-orange-800 border border-orange-200 rounded px-2 py-0.5 flex-shrink-0"
+                    >
+                      Tekrar
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      if (confirm(`"${s.original_filename || s.external_url || s.type}" silinsin mi?`)) {
+                        deleteMut.mutate(s.id)
+                      }
+                    }}
+                    disabled={deleteMut.isPending}
+                    className="text-xs text-red-400 hover:text-red-600 flex-shrink-0 px-1"
+                    title="Sil"
+                  >
+                    ✕
+                  </button>
                 </div>
               ))}
             </div>

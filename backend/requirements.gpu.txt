@@ -1,0 +1,26 @@
+# GPU worker requirements (PC with CUDA GPU)
+# Install with: pip install -r requirements.gpu.txt
+#
+# Base deps shared with VPS worker
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+rq==1.17.1
+redis==5.2.1
+minio==7.2.12
+qdrant-client==1.12.1
+loguru==0.7.3
+python-dotenv==1.0.1
+
+# Audio/video transcription (requires CUDA)
+faster-whisper==1.1.0
+# torch is a dependency of faster-whisper — install the CUDA build separately:
+# pip install torch --index-url https://download.pytorch.org/whl/cu121
+
+# Embeddings
+sentence-transformers==3.3.1
+
+# YouTube download
+yt-dlp==2024.12.13
+
+# Media processing
+ffmpeg-python==0.2.0

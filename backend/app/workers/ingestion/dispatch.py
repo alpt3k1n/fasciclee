@@ -27,7 +27,7 @@ def process_source(source_id: str):
             if source.type == SourceType.pdf:
                 from app.workers.ingestion.pdf import process_pdf
                 process_pdf(source, db)
-            elif source.type == SourceType.audio:
+            elif source.type in (SourceType.audio, SourceType.video):
                 from app.workers.ingestion.audio import process_audio
                 process_audio(source, db)
             elif source.type == SourceType.youtube:

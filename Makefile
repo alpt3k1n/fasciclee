@@ -1,4 +1,4 @@
-.PHONY: up down migrate shell-api shell-db logs
+.PHONY: up down migrate migrate-create shell-api shell-db logs fe-dev fe-build gpu-worker setup
 
 up:
 	docker compose up -d
@@ -26,6 +26,9 @@ fe-dev:
 
 fe-build:
 	cd frontend && npm run build
+
+gpu-worker:
+	@bash scripts/start_gpu_worker.sh
 
 setup: up
 	@echo "Waiting 15s for services to start..."
