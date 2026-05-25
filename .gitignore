@@ -17,8 +17,8 @@ node_modules/
 frontend/dist/
 frontend/.vite/
 
-# Alembic
-backend/alembic.ini
+# Alembic runtime ini (credentials olabilir, örnek repo'da track etmiyoruz)
+# backend/alembic.ini  # zaten tracked, credentials içermediği sürece OK
 
 # Docker volumes (local)
 docker-data/
