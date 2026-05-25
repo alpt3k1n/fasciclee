@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
 from app.api.courses import router as courses_router
+from app.api.curriculum import router as curriculum_router
 
 
 @asynccontextmanager
@@ -24,6 +25,7 @@ app.add_middleware(
 )
 
 app.include_router(courses_router)
+app.include_router(curriculum_router)
 
 
 @app.get("/api/health")

@@ -26,6 +26,25 @@ export interface Source {
   indexed_at: string | null
 }
 
+export interface Objective {
+  id: string
+  parent_id: string | null
+  code: string | null
+  text: string
+  bloom_level: string | null
+  position: number | null
+  children: Objective[]
+}
+
+export interface Curriculum {
+  id: string
+  course_id: string
+  title: string
+  source_format: string | null
+  created_at: string
+  objectives: Objective[]
+}
+
 export const courses = {
   list: () => api.get<Course[]>('/courses').then(r => r.data),
   get: (id: string) => api.get<Course>(`/courses/${id}`).then(r => r.data),
@@ -44,4 +63,11 @@ export const courses = {
   },
   addYouTube: (courseId: string, url: string) =>
     api.post<Source>(`/courses/${courseId}/sources/youtube`, { url }).then(r => r.data),
+
+  listCurricula: (courseId: string) =>
+    api.get<Curriculum[]>(`/courses/${courseId}/curriculum`).then(r => r.data),
+  createCurriculum: (courseId: string, data: { title: string; source_format: string; raw_content: string }) =>
+    api.post<Curriculum>(`/courses/${courseId}/curriculum`, data).then(r => r.data),
+  deleteCurriculum: (courseId: string, curriculumId: string) =>
+    api.delete(`/courses/${courseId}/curriculum/${curriculumId}`),
 }
