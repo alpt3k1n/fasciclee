@@ -26,6 +26,39 @@ export interface Source {
   indexed_at: string | null
 }
 
+export interface SectionOut {
+  id: string
+  topic_node_id: string
+  topic_node_title: string
+  position: number | null
+  status: string
+  retry_count: number
+  pass1_outline: Record<string, unknown> | null
+  pass2_expanded_md: string | null
+  pass3_enriched_md: string | null
+  pass4_questions_md: string | null
+  final_md: string | null
+  generated_at: string | null
+}
+
+export interface GenerationOut {
+  id: string
+  course_id: string
+  status: string
+  config: Record<string, unknown>
+  started_at: string
+  completed_at: string | null
+  error_message: string | null
+  sections: SectionOut[]
+}
+
+export interface GenerationConfig {
+  depth: string
+  language: string
+  test_question_count: number
+  include_clinical_correlations: boolean
+}
+
 export interface TopicNodeOut {
   id: string
   parent_id: string | null
@@ -89,6 +122,15 @@ export const courses = {
   },
   addYouTube: (courseId: string, url: string) =>
     api.post<Source>(`/courses/${courseId}/sources/youtube`, { url }).then(r => r.data),
+
+  listGenerations: (courseId: string) =>
+    api.get<GenerationOut[]>(`/courses/${courseId}/generations`).then(r => r.data),
+  startGeneration: (courseId: string, config?: Partial<GenerationConfig>) =>
+    api.post<GenerationOut>(`/courses/${courseId}/generate`, config ?? {}).then(r => r.data),
+  getGeneration: (generationId: string) =>
+    api.get<GenerationOut>(`/generations/${generationId}`).then(r => r.data),
+  cancelGeneration: (generationId: string) =>
+    api.post(`/generations/${generationId}/cancel`),
 
   getTopicGraph: (courseId: string) =>
     api.get<TopicGraphOut>(`/courses/${courseId}/topic-graph`).then(r => r.data),

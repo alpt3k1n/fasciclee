@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { courses, type Source } from '@/lib/api'
 import CurriculumTab from '@/components/CurriculumTab'
 import TopicGraphTab from '@/components/TopicGraphTab'
+import GenerationTab from '@/components/GenerationTab'
 
 const STATUS_LABEL: Record<string, string> = {
   pending: 'Bekliyor',
@@ -31,7 +32,7 @@ const TYPE_ICON: Record<string, string> = {
   curriculum: '📋',
 }
 
-type Tab = 'sources' | 'curriculum' | 'topic-graph'
+type Tab = 'sources' | 'curriculum' | 'topic-graph' | 'generation'
 
 export default function CourseDetail() {
   const { id } = useParams<{ id: string }>()
@@ -80,6 +81,7 @@ export default function CourseDetail() {
     { key: 'sources', label: 'Kaynaklar' },
     { key: 'curriculum', label: 'Müfredat' },
     { key: 'topic-graph', label: 'Konu Grafiği' },
+    { key: 'generation', label: 'Üretim' },
   ]
 
   return (
@@ -193,6 +195,9 @@ export default function CourseDetail() {
 
       {/* Topic graph tab */}
       {tab === 'topic-graph' && <TopicGraphTab courseId={id!} />}
+
+      {/* Generation tab */}
+      {tab === 'generation' && <GenerationTab courseId={id!} />}
     </div>
   )
 }

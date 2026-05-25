@@ -6,6 +6,7 @@ from loguru import logger
 from app.api.courses import router as courses_router
 from app.api.curriculum import router as curriculum_router
 from app.api.topic_graph import router as topic_router
+from app.api.generation import router as generation_router
 
 
 @asynccontextmanager
@@ -28,6 +29,7 @@ app.add_middleware(
 app.include_router(courses_router)
 app.include_router(curriculum_router)
 app.include_router(topic_router)
+app.include_router(generation_router)
 
 
 @app.get("/api/health")
