@@ -4,10 +4,11 @@ POST /api/generations/{id}/compile   — enqueue compilation job
 GET  /api/generations/{id}/artifacts — list artifacts with presigned URLs
 """
 import uuid
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.database import AsyncSessionLocal
+from app.database import get_db
 from app.config import settings
 from app.models import FascicleGeneration, Artifact
 from app.models.generation import GenerationStatus
@@ -17,18 +18,17 @@ router = APIRouter(prefix="/api", tags=["compilation"])
 
 
 @router.post("/generations/{generation_id}/compile")
-async def compile_generation(generation_id: str):
+async def compile_generation(generation_id: str, db: AsyncSession = Depends(get_db)):
     try:
         gen_uuid = uuid.UUID(generation_id)
     except ValueError:
         raise HTTPException(400, "Invalid generation ID")
 
-    async with AsyncSessionLocal() as db:
-        gen = await db.get(FascicleGeneration, gen_uuid)
-        if not gen:
-            raise HTTPException(404, "Generation not found")
-        if gen.status not in (GenerationStatus.completed, GenerationStatus.failed):
-            raise HTTPException(422, f"Cannot compile a generation with status '{gen.status.value}'")
+    gen = await db.get(FascicleGeneration, gen_uuid)
+    if not gen:
+        raise HTTPException(404, "Generation not found")
+    if gen.status not in (GenerationStatus.completed, GenerationStatus.failed):
+        raise HTTPException(422, f"Cannot compile a generation with status '{gen.status.value}'")
 
     import redis
     from rq import Queue
@@ -43,24 +43,23 @@ async def compile_generation(generation_id: str):
 
 
 @router.get("/generations/{generation_id}/artifacts")
-async def list_artifacts(generation_id: str):
+async def list_artifacts(generation_id: str, db: AsyncSession = Depends(get_db)):
     try:
         gen_uuid = uuid.UUID(generation_id)
     except ValueError:
         raise HTTPException(400, "Invalid generation ID")
 
-    async with AsyncSessionLocal() as db:
-        gen = await db.get(FascicleGeneration, gen_uuid)
-        if not gen:
-            raise HTTPException(404, "Generation not found")
+    gen = await db.get(FascicleGeneration, gen_uuid)
+    if not gen:
+        raise HTTPException(404, "Generation not found")
 
-        rows = (
-            await db.execute(
-                select(Artifact)
-                .where(Artifact.generation_id == gen_uuid)
-                .order_by(Artifact.created_at)
-            )
-        ).scalars().all()
+    rows = (
+        await db.execute(
+            select(Artifact)
+            .where(Artifact.generation_id == gen_uuid)
+            .order_by(Artifact.created_at)
+        )
+    ).scalars().all()
 
     result = []
     for art in rows:
