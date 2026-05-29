@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { courses, type TopicNodeOut, type GapReportItem } from '@/lib/api'
 
 const STATUS_CONFIG = {
@@ -34,7 +34,6 @@ function NodeRow({
   courseId: string
   onRefresh: () => void
 }) {
-  const qc = useQueryClient()
   const [editing, setEditing] = useState(false)
   const [title, setTitle] = useState(node.title)
   const [summary, setSummary] = useState(node.summary ?? '')
@@ -164,7 +163,6 @@ function NodeRow({
 }
 
 export default function TopicGraphTab({ courseId }: { courseId: string }) {
-  const qc = useQueryClient()
   const [showGap, setShowGap] = useState(false)
 
   const { data, isLoading, refetch } = useQuery({
