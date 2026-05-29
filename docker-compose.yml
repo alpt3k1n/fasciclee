@@ -71,7 +71,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     env_file: .env
-    command: rq worker vps_queue --url ${REDIS_URL} --with-scheduler
+    command: rq worker vps_queue --url ${REDIS_URL}
     depends_on: [redis, postgres]
     networks: [internal]
     volumes:

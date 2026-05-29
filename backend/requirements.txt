@@ -14,9 +14,9 @@ pydantic==2.10.3
 pydantic-settings==2.6.1
 
 # Job queue
-rq==1.17.1
+rq==2.9.0
 redis==5.2.1
-rq-scheduler==0.13.1
+rq-scheduler==0.14.0
 
 # Object storage
 minio==7.2.12

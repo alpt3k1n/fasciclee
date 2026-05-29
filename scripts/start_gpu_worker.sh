@@ -32,5 +32,4 @@ echo ""
 
 exec rq worker gpu_queue \
   --url "${REDIS_URL}" \
-  --name "gpu-worker-$(hostname)" \
-  --with-scheduler
+  --name "gpu-worker-$(hostname)"
