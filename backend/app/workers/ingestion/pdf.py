@@ -18,7 +18,7 @@ def process_pdf(source: Source, db: Session):
     data = download_bytes(source.storage_key)
     doc = fitz.open(stream=data, filetype="pdf")
 
-    source.metadata_["page_count"] = len(doc)
+    source.metadata_ = {**source.metadata_, "page_count": len(doc)}
     chunks_data = []
 
     for page_num, page in enumerate(doc, start=1):
