@@ -11,8 +11,8 @@ def get_minio() -> Minio:
     if _client is None:
         _client = Minio(
             settings.minio_endpoint,
-            access_key=settings.minio_access_key,
-            secret_key=settings.minio_secret_key,
+            access_key=settings.minio_user,
+            secret_key=settings.minio_password,
             secure=settings.minio_secure,
         )
         try:

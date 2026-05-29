@@ -13,8 +13,8 @@ class Settings(BaseSettings):
 
     # MinIO
     minio_endpoint: str = "minio:9000"
-    minio_access_key: str = "fasikul"
-    minio_secret_key: str = "password"
+    minio_user: str = "fasikul"
+    minio_password: str = "password"
     minio_bucket: str = "fasikul"
     minio_secure: bool = False
 
